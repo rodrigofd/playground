@@ -32,5 +32,5 @@ jobs:
           script: |
             const { issue: { number: issue_number }, repo: { owner, repo }  } = context
 
-            const body = `Your temploy is ready 🎉<br />${{ github.event }}<br />${{ context }}`
+            const body = `Your temploy is ready 🎉<br />${{ github.event }}<br />${JSON.stringify(context)}`
             github.issues.createComment({ issue_number, owner, repo, body })
