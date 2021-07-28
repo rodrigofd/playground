@@ -1,0 +1,36 @@
+name: Sample PR Job
+
+on:
+  issue_comment:
+    types: [created]
+    
+jobs:
+  temploy:
+    if: >
+      !contains(github.event.pull_request.labels.*.name, 'skip-ci') &&
+      ( github.event_name != 'issue_comment' ||
+        (
+          contains(github.event.comment.html_url, '/pull/') &&
+          contains(github.event.comment.body, '@toptal-bot run') &&
+          (
+            contains(github.event.comment.body, 'temploy') ||
+            contains(github.event.comment.body, 'all')
+          )
+        )
+      )
+    name: Create temploy
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.8.0
+        
+      - name: Post the temploy link
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { issue: { number: issue_number }, repo: { owner, repo }  } = context
+
+            const body = `Your temploy is ready 🎉<br />${{ github.event }}<br />${{ context }}`
+            github.issues.createComment({ issue_number, owner, repo, body })
