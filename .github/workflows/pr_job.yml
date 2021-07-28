@@ -35,9 +35,9 @@ jobs:
               repo: context.repo.repo,
               pull_number: context.issue.number
             })
-            core.info(JSON.stringify(result.data))
+            const prBranch = result.data.head.ref
             
             const { issue: { number: issue_number }, repo: { owner, repo }  } = context
 
-            const body = `Your temploy is ready`
+            const body = `Your temploy is ready ${prBranch}`
             github.issues.createComment({ issue_number, owner, repo, body })
