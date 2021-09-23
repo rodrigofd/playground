@@ -1,6 +1,11 @@
 name: Generate
+
+on:
+  workflow_dispatch:
+  
 jobs:
   generate:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2.2.0
         with:
