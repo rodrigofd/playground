@@ -11,7 +11,7 @@ jobs:
   generate:
     runs-on: ubuntu-latest
     steps:    
-      - name: Store the input param on env
+      - name: Store the input tag on env
         id: set_input_param_tag
         run: |
           echo "TAG_NAME=${{ github.event.inputs.tag_name }}" >> $GITHUB_ENV
@@ -24,11 +24,11 @@ jobs:
         id: previoustag
         uses: "WyriHaximus/github-action-get-previous-tag@v1"
         
-      - name: Store the input param on env
+      - name: If input is empty store the latest tag on env
         id: set_latest_tag
         if: env.TAG_NAME == null
         run: |
           echo "TAG_NAME=${{ steps.previoustag.outputs.tag }}" >> $GITHUB_ENV
         
       - name: Get Tag
-        run: echo "The latest Git Tag is ${{ steps.previoustag.outputs.tag }}"
+        run: echo "The latest Git Tag is ${{ env.TAG_NAME }}"
