@@ -2,17 +2,33 @@ name: Generate
 
 on:
   workflow_dispatch:
-  
+    inputs:
+      tag_name:
+        description: Billing Frontend Release Tag
+        required: false
+        
 jobs:
   generate:
     runs-on: ubuntu-latest
-    steps:
+    steps:    
+      - name: Store the input param on env
+        id: set_input_param_tag
+        run: |
+          echo "TAG_NAME=${{ github.event.inputs.tag_name }}" >> $GITHUB_ENV
+          
       - uses: actions/checkout@v2.2.0
         with:
           fetch-depth: 0
-      - name: 'Get Previous tag'
+          
+      - name: Get Previous tag
         id: previoustag
         uses: "WyriHaximus/github-action-get-previous-tag@v1"
         
-      - name: Get color
+      - name: Store the input param on env
+        id: set_latest_tag
+        if: env.TAG_NAME == null
+        run: |
+          echo "TAG_NAME=${{ steps.previoustag.outputs.tag }}" >> $GITHUB_ENV
+        
+      - name: Get Tag
         run: echo "The latest Git Tag is ${{ steps.previoustag.outputs.tag }}"
